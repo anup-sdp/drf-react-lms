@@ -1,0 +1,54 @@
+module 32, tausif vi
+copy project codes
+requirements.txt equivalent is package.json in react(vite)
+
+project root, cmd:
+myenv\Scripts\activate -------
+cd drf-lms-backend
+
+pip install -r requirements.txt
+
+cd ../react-lms-frontend
+cd ../drf-lms-backend
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py runserver -------
+-----
+Frontend dependencies are managed via package.json (no Python venv needed)
+in github code package.json includes needed packages and vite.config.js includes tailwind.
+open separate terminal.
+cd react-lms-frontend
+npm install 
+npm run dev --------
+
+******************************
+myenv\Scripts\activate
+cd drf-lms-backend
+python manage.py runserver
+---
+cd react-lms-frontend
+npm run dev
+******************************
+pip install django-cors-headers
+
+---
+chrome inspect: application > storage > local storage > token
+token shows after login
+AuthContext hook
+useAuth hook
+
+
+api doc: http://127.0.0.1:8000/swagger/
+
+(Admin)admin=1234
+(Teacher)naim-aB@12345
+(Student)anup-aB@12345
+(Student)rasel-aB@12345
+
+react dev tools extention, press f12 for inspect, see new componets and profiler tabs.
+
+video2: Working with Category, Product, Invoice | Report, Dashboard Summary Front End
+
+at video2 1:25:30
+

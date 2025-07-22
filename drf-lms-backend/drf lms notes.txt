@@ -1,0 +1,54 @@
+module 26 LMS (learning management system), from pre-recorded videos:
+
+create venv myenv
+myenv\Scripts\activate -------
+code .
+pip install django
+django-admin startproject lms_backend .
+python manage.py startapp core
+python manage.py startapp users
+
+ctreate models.py and admin.py.
+
+pip install Pillow  # required for ImageField to handle image uploads
+python manage.py makemigrations
+python manage.py migrate
+
+pip install djangorestframework
+write serializers.py
+
+python manage.py createsuperuser
+-admin-admin@example.com-1234
+
+python manage.py runserver --------
+login admin at: http://127.0.0.1:8000/admin/
+set role to admin
+
+anup-student-1234
+naim-teacher-1234
+
+pip install drf-yasg
+write views.py
+
+
+pip install djangorestframework-simplejwt[crypto]  
+- (rest_framework_simplejwt) specifically designed to be used with, provides JWT authentication for DRF
+write urls.py
+
+python manage.py makemigrations
+python manage.py migrate
+
+
+=============================
+project class 4, jayed, notes:
+hostings:
+1) free (pythonanywhere, render etc)
+2) shared hosting(pnr hosting, eg. whm/c panel: normally mySql only)
+3) entry level: vps instance, / multiple vps, (in bd: robi cloud, colocity)
+
+
+
+
+
+
+

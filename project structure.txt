@@ -1,0 +1,11 @@
+drf-react-lms/
+├── myenv/                      # Virtual environment (root) for django
+├── drf-lms-backend/            # Django backend
+│   ├── requirements.txt        # Python dependencies
+│   ├── manage.py               # Django commands
+│   └── ...                     # Django apps, settings, etc.
+└── react-lms-frontend/         # React (Vite) frontend
+    ├── node_modules/           # npm packages
+    ├── src/                    # React source code
+    ├── package.json            # Frontend dependencies
+    └── vite.config.js          # Vite config
