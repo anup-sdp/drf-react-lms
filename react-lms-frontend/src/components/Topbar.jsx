@@ -1,6 +1,8 @@
-import React from "react"; // Import the React library to use JSX and React features
 import Avatar from "./Avatar"; // Import the Avatar component to display the user's initials
-
+///
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
+///
 // Define the Topbar functional component, which takes several props:
 // - user: the current user object (with username, email, role)
 // - showProfile: boolean indicating if the profile dropdown is visible
@@ -54,7 +56,7 @@ function Topbar({ user, showProfile, setShowProfile, logout, setCurrentPage }) {
                 setCurrentPage("profile"); // Navigate to the profile page
               }}
             >
-              Profile
+              Profile Info
             </button>
             {/* Logout button */}
             <button
@@ -62,6 +64,14 @@ function Topbar({ user, showProfile, setShowProfile, logout, setCurrentPage }) {
               onClick={logout} // Call the logout function
             >
               Logout
+            </button>
+			<button
+              className="w-full text-left px-4 py-2 hover:bg-blue-100 text-sm transition"
+              onClick={() => {
+                setShowProfile(false); // Close the dropdown
+              }}
+            >
+              cancel
             </button>
           </div>
         )}

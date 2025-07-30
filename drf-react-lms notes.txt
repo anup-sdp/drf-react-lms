@@ -70,12 +70,14 @@ git commit -m "update DashboardPage.jsx"
 git push -u origin main
 ---
 git add .
-git commit -m "update v1.0"
+git commit -m "add cancel button on profile popup"
 git push -u origin main
 ---
 
 ------------------
 
 
-at video4 43:30
-UsersPage.jsx
+at video4 1:43:30
+DashboardPage.jsx
+// todo: add delete category, add m2m course-teacher, profile popup cancel button(done),
+// useState, useEffect

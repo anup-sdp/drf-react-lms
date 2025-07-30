@@ -11,11 +11,11 @@ function DashboardPage() {
   const { logout, token } = useAuth();
   const [user, setUser] = useState({
     username: "User",
-    role: "student",
-    email: "user@email.com",
+    role: "user", // student
+    email: "user@example.com",
   });
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [showProfile, setShowProfile] = useState(false);
+  const [showProfile, setShowProfile] = useState(false); // popup at top right corner
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [isAdmin, setIsAdmin] = useState(false);
 
