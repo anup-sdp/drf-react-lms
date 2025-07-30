@@ -72,12 +72,17 @@ git push -u origin main
 git add .
 git commit -m "convert course-instructor to m2m field"
 git push -u origin main
----
-
+====
+(git branch is at video 2.6 phitron sdp)
+git branch  --(show current branch)
+git branch assignment-v1  --(create new branch)
+git checkout assignment-v1  --(make it active branch) ----------------- 2:20 am
+write code for this branch and commit to save them:
+...
 ------------------
 
 
 at video4 1:43:30
 DashboardPage.jsx
-// todo: add delete category, add m2m course-teacher, profile popup cancel button(done),
+// todo: add delete category, add m2m course-teacher, course image(banner), profile popup cancel button(done),
 // useState, useEffect
