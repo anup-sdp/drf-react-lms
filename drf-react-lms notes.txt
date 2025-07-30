@@ -70,7 +70,7 @@ git commit -m "update DashboardPage.jsx"
 git push -u origin main
 ---
 git add .
-git commit -m "add cancel button on profile popup"
+git commit -m "convert course-instructor to m2m field"
 git push -u origin main
 ---
 

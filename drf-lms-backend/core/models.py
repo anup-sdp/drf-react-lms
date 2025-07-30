@@ -1,3 +1,4 @@
+# core, moels.py:
 from django.db import models
 # from django.contrib.auth.models import User
 from users.models import User
@@ -5,6 +6,7 @@ from users.models import User
 
 class Category(models.Model):
     title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)  # Added description field
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -18,9 +20,10 @@ class Course(models.Model):
     banner = models.ImageField(upload_to='course_banners/')  # MEDIA_ROOT/course_banners/
     price = models.FloatField()
     duration = models.FloatField()
-    is_active = models.BooleanField()
-    category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
-    instructor_id = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role' : 'teacher'})
+    is_active = models.BooleanField()    
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)  # Changed from category_id
+    #instructor_id = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role' : 'teacher'})
+    instructors = models.ManyToManyField(User, limit_choices_to={'role': 'teacher'}, related_name='courses')  # made m2m field 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
