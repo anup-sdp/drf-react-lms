@@ -36,7 +36,7 @@ function UsersPage() {
         }
         setLoading(false);
       })
-      .catch((error) => {
+      .catch((error) => { // add refresh token usage or send to login page code for expired token.
         console.error("Error:", error);
         setLoading(false);
       });

@@ -1,7 +1,8 @@
-import { createContext } from "react";
+//previous name: AuthContext.js, this extra file not needed! integrated in AuthContext.jsx
+//import { createContext } from "react";
 
 // Create a new context called AuthContext and export it for use in other components
-export const AuthContext = createContext();
+//export const AuthContext = createContext();
 
 
 /*

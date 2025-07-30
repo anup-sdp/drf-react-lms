@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+//import React, { useState } from "react";
+import React, { createContext, useState } from "react";
 import axios from "axios";
-import { AuthContext } from "./AuthContext"; // from AuthContext.js
+//import { AuthContext } from "./AuthContext"; // from AuthContext.js // export const AuthContext = createContext();
+export const AuthContext = createContext();
 
 // Define the AuthProvider component, which will wrap children components and provide authentication context
 export function AuthProvider({ children }) {
@@ -29,7 +31,9 @@ export function AuthProvider({ children }) {
   // Function to handle user registration
   const register = async (username, email, password, role) => {
     // Send POST request to register a new user
-    await axios.post("http://localhost:8000/api/user/auth/", { username, email, password, role });
+	const baseUrl = import.meta.env.localhost; // -----
+    //await axios.post("http://localhost:8000/api/user/auth/", { username, email, password, role });
+    await axios.post(`${baseUrl}/api/user/auth/`, { username, email, password, role });
     // After registration, navigate to the login page
     setPage("login");
   };
@@ -44,3 +48,6 @@ export function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
+
+// import like: import { AuthContext, AuthProvider } from "./components/AuthContext";

@@ -128,6 +128,7 @@ def material_list_create(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @swagger_auto_schema(method='post', request_body=EnrollmentSerializer)
 @api_view(['GET', 'POST'])
 def enrollment_list_create(request):
@@ -141,6 +142,7 @@ def enrollment_list_create(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @swagger_auto_schema(method='post', request_body=QuestionAnswerSerializer)
 @api_view(['GET', 'POST'])

@@ -1,3 +1,5 @@
+drf lms + react
+reacpt part:
 module 32, tausif vi
 copy project codes
 requirements.txt equivalent is package.json in react(vite)
@@ -50,5 +52,30 @@ react dev tools extention, press f12 for inspect, see new componets and profiler
 
 video2: Working with Category, Product, Invoice | Report, Dashboard Summary Front End
 
-at video2 1:25:30
+------------------
+github upload:
+git init
+git status
+git add .
+git status
+git commit -m "initial commit"
+git status
+---
+(create bramch in githib)
+git branch -M main
+git remote add origin https://github.com/anup-sdp/drf-react-lms.git
+git push -u origin main
+---
+git commit -m "update DashboardPage.jsx"
+git push -u origin main
+---
+git add .
+git commit -m "update v1.0"
+git push -u origin main
+---
 
+------------------
+
+
+at video4 43:30
+UsersPage.jsx
