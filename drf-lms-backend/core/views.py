@@ -12,6 +12,17 @@ from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
+
+class IsAdminOrTeacher(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role in ['admin', 'teacher']
+
+class IsAdminOrInstructor(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.user.role == 'admin':
+            return True
+        return request.user in obj.instructors.all()
 
 @swagger_auto_schema(method='post', request_body=CategorySerializer)
 @api_view(['GET', 'POST'])
@@ -19,14 +30,14 @@ from rest_framework.permissions import IsAuthenticated
 def category_list_create(request):
     if request.method == 'GET':
         categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True) # serialize or deserialize a collection of objects (a queryset or list) instead of a single object.
+        serializer = CategorySerializer(categories, many=True, context={'request': request}) # serialize or deserialize a collection of objects (a queryset or list) instead of a single object.
         return Response(serializer.data)
 
     elif request.method == 'POST':
         if request.user.role != 'admin':
             return Response({"detail": "Only admin can create categories."}, status= status.HTTP_403_FORBIDDEN) # or status=403
 
-        serializer = CategorySerializer(data=request.data)  # data for a single category
+        serializer = CategorySerializer(data=request.data, context={'request': request})  # data for a single category
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -36,67 +47,86 @@ def category_list_create(request):
 
 @swagger_auto_schema(method='post', request_body=CourseSerializer)
 @api_view(['GET', 'POST'])
-@permission_classes([AllowAny])  # IsAuthenticated, AllowAny  # authentication_classes ?
+@permission_classes([IsAuthenticated, IsAdminOrTeacher])  # IsAuthenticated, AllowAny  # authentication_classes ?
 def course_list_create(request):
     if not request.user.is_authenticated:
         return Response({'detail': 'error: user is not Authenticated'}, status=403)
     if request.method == 'GET':
-        if request.user.role == 'admin':
-            courses = Course.objects.all()
-        elif request.user.role == 'teacher':
-            courses = Course.objects.filter(instructor_id=request.user)  # ---
-        elif request.user.role == 'student':
-            courses = Course.objects.all()  # or add filter for enrolled courses
+        if request.user.role in ['admin', 'teacher', 'student']:
+            courses = Course.objects.all()        
         else:
             return Response({'detail': 'Unauthorized role'}, status=403)
         
-        serializer = CourseSerializer(courses, many=True)
+        serializer = CourseSerializer(courses, many=True, context={'request': request}) # Pass request context to serializer
         return Response(serializer.data)
-
+    
     elif request.method == 'POST':
-        if request.user.role != 'teacher':
-            return Response({'detail': 'Only teachers can create courses.'}, status=403)
-        
-        serializer = CourseSerializer(data=request.data)
+        # Allow both admin and teacher to create courses
+        if request.user.role not in ['admin', 'teacher']:
+            return Response({'detail': 'Only admins or teachers can create courses.'}, status=403)
+                
+        serializer = CourseSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            serializer.save(instructor_id=request.user)  # ---
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @swagger_auto_schema(method='put', request_body=CourseSerializer)
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminOrInstructor])
 def course_detail(request, pk):
     try:
         course = Course.objects.get(pk=pk)
     except Course.DoesNotExist:
         return Response({'detail': 'Course not found'}, status=404)
-
+    
     if request.method == 'GET':
-        #print("test result = ---- ",course.instructor_id, type(course.instructor_id))
-        if request.user.role == 'admin' or request.user == course.instructor_id:  # is comparison correct --- request.user.pk == course.instructor_id.pk
-            serializer = CourseSerializer(course)
-            return Response(serializer.data)
-        return Response({'detail': 'Permission denied'}, status=403)
-
-    elif request.method == 'PUT':
-        if request.user.role != 'teacher' or request.user != course.instructor_id:
-            return Response({'detail': 'Only the course owner (teacher) can update this course.'}, status=403)
+        # Admin can view any course
+        if request.user.role == 'admin':
+            pass
+        # Teacher can view only courses they're instructing
+        elif request.user.role == 'teacher':
+            if request.user not in course.instructors.all():
+                return Response({'detail': 'Permission denied'}, status=403)
+        # Student can view any course
+        elif request.user.role == 'student':
+            pass
+        else:
+            return Response({'detail': 'Unauthorized role'}, status=403)
         
-        serializer = CourseSerializer(course, data=request.data)
+        serializer = CourseSerializer(course, context={'request': request})
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
+        # Admin can update any course
+        if request.user.role == 'admin':
+            pass
+        # Teacher can update only courses they're instructing
+        elif request.user.role == 'teacher':
+            if request.user not in course.instructors.all():
+                return Response({'detail': 'Only instructors of this course can update it.'}, status=403)
+        else:
+            return Response({'detail': 'Unauthorized role'}, status=403)
+        serializer = CourseSerializer(course, data=request.data, context={'request': request})
         if serializer.is_valid():
-            #serializer.save(instructor_id=request.user)
-            serializer.save()  # Sufficient for updates, assuming instructor_id isn’t modifiable
+            serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
     elif request.method == 'DELETE':
-        if request.user.role != 'teacher' or request.user != course.instructor_id:
-            return Response({'detail': 'Only the course owner (teacher) can delete this course.'}, status=403)
+        # Admin can delete any course
+        if request.user.role == 'admin':
+            pass
+        # Teacher can delete only courses they're instructing
+        elif request.user.role == 'teacher':
+            if request.user not in course.instructors.all():
+                return Response({'detail': 'Only instructors of this course can delete it.'}, status=403)
+        else:
+            return Response({'detail': 'Unauthorized role'}, status=403)
+        
         course.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)  # HTTP 204 responses MUST NOT include a response body.
-        # return Response({'detail': 'Course deleted'}, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
         
         
 	
@@ -114,6 +144,7 @@ def lesson_list_create(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @swagger_auto_schema(method='post', request_body=MaterialSerializer)
 @api_view(['GET', 'POST'])

@@ -17,25 +17,22 @@ class CourseSerializer(serializers.ModelSerializer):
     # Read side: show full instructor details
     instructors_details = InstructorSerializer(source='instructors', many=True, read_only=True)
     # Write side: accept list of instructor IDs
-    instructors = serializers.PrimaryKeyRelatedField(
-        many=True,
-        queryset=User.objects.filter(role='teacher'),
-        write_only=True
-    )
+    instructors = serializers.PrimaryKeyRelatedField(many=True,queryset=User.objects.filter(role='teacher'),write_only=True)    
     # This will show instructor IDs in both input and output:
     # instructors = serializers.PrimaryKeyRelatedField(
     #     many=True,
     #     queryset=User.objects.filter(role='teacher')
     # )
     category_title = serializers.CharField(source='category.title', read_only=True)
+    # Image handling
+    banner_url = serializers.ImageField(source='banner', read_only=True)
     
     class Meta:
         model = Course
         fields = '__all__'
         # Or specify fields explicitly:
         # fields = ('id', 'title', 'description', 'banner', 'price', 'duration', 
-        #           'is_active', 'category', 'instructors', 'category_title', 
-        #           'created_at', 'updated_at')
+        #           'is_active', 'category', 'instructors', 'category_title', 'created_at', 'updated_at')                 
 
     def create(self, validated_data):
         instructors_data = validated_data.pop('instructors', [])
@@ -51,7 +48,29 @@ class CourseSerializer(serializers.ModelSerializer):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
-        return instance
+        return instance    
+
+"""
+^
+For React frontend, FormData for uploads:
+----
+const formData = new FormData();
+formData.append('title', course.title);
+formData.append('description', course.description);
+formData.append('category', course.category);
+formData.append('instructors', JSON.stringify(course.instructors)); // Array of IDs
+if (course.banner) {
+  formData.append('banner', course.banner); // File object
+}
+
+axios.post('/api/courses/', formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+});
+------
+display image: <img src={course.banner_url} alt={course.title} />
+"""	
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
