@@ -43,7 +43,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('core.urls')),
     path('api/user/', include('users.urls')),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # POST http://localhost:8000/api/token/ '{"username": "yourusername", "password": "yourpassword"}'
 	# ^ call in POST method with username & password, to get access and refresh token as response: {"refresh": "...", "access": "..."}	 
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'), 
@@ -51,3 +51,13 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+"""
+curl -X POST -H "Content-Type: application/json" -d '{"username": "yourusername", "password": "yourpassword"}' http://localhost:8000/api/token/
+
+reply:
+{
+    "access": "eyJhbG...",
+    "refresh": "eyJhbG..."
+}
+"""

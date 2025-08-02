@@ -1,43 +1,40 @@
 from django.shortcuts import render
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .models import User
 from .serializers import UserSerializer
-#
+from drf_yasg.utils import swagger_auto_schema
 from django.core.exceptions import ObjectDoesNotExist
 
-
+@swagger_auto_schema(method='get', responses={200: UserSerializer(many=True)})
+@swagger_auto_schema(method='post', request_body=UserSerializer, responses={201: UserSerializer})
 @api_view(['GET', 'POST'])
 def user_list_create(request):
     if request.method == 'GET':
-        if not request.user.is_authenticated :
-            return Response({'detail' : 'Authentication credentials were not provided'}, status=401)
+        if not request.user.is_authenticated:
+            return Response({'detail': 'Authentication credentials were not provided'}, status=401)
         
         if request.user.role == 'admin':
             users = User.objects.all()
         else:
             users = User.objects.filter(id=request.user.id)
-
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
-
     elif request.method == 'POST':
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save() # create new user
+            serializer.save()  # create new user
             return Response(serializer.data, status=status.HTTP_201_CREATED)  # password was not sent to response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-# new added:
-
+@swagger_auto_schema(method='get', responses={200: UserSerializer})
+@swagger_auto_schema(method='put', request_body=UserSerializer, responses={200: UserSerializer})
 @api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def current_user_profile(request):
-    #Get or update the current user's profile
+    # Get or update the current user's profile
     if request.method == 'GET':
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
@@ -50,10 +47,13 @@ def current_user_profile(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@swagger_auto_schema(method='get', responses={200: UserSerializer})
+@swagger_auto_schema(method='put', request_body=UserSerializer, responses={200: UserSerializer})
+@swagger_auto_schema(method='delete', responses={204: 'No Content'})
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def user_detail(request, user_id):
-    #Get, update, or delete a specific user (admin only)
+    # Get, update, or delete a specific user (admin only)
     if request.user.role != 'admin':
         return Response({'detail': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)
     
@@ -75,6 +75,4 @@ def user_detail(request, user_id):
     
     elif request.method == 'DELETE':
         user.delete()
-        return Response({'detail': 'User deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
-
-
+        return Response(status=status.HTTP_204_NO_CONTENT)

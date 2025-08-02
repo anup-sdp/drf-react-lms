@@ -83,3 +83,5 @@ lerna-debug.log*
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+db-pre_m2m.sqlite3

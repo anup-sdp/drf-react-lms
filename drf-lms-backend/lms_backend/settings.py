@@ -152,7 +152,7 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),  # ------------------------
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -176,6 +176,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     # If you're using Vite’s default port:
     "http://localhost:5173",
+	"http://127.0.0.1:8000"  # add
 ]
 
 # If you need to allow credentials (cookies, Authorization headers):

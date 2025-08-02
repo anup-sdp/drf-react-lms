@@ -45,8 +45,11 @@ api doc: http://127.0.0.1:8000/swagger/
 
 (Admin)admin=1234
 (Teacher)naim-aB@12345
+(Teacher)rasel-aB@12345
+(Teacher)habib-aB@12345
 (Student)anup-aB@12345
-(Student)rasel-aB@12345
+(Student)rakib-aB@12345
+(Student)kramnik-aB@12345
 
 react dev tools extention, press f12 for inspect, see new componets and profiler tabs.
 
