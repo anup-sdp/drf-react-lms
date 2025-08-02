@@ -65,13 +65,12 @@ export default function CoursesPage() {
 
   const fetchInstructors = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/api/users/auth/`, {
+      const response = await axios.get(`${baseUrl}/api/user/instructors/`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      // Filter for teachers only
-      setInstructors(response.data.filter(user => user.role === 'teacher'));
+      setInstructors(response.data);
     } catch (err) {
       console.error('Error fetching instructors:', err);
     }
@@ -367,7 +366,7 @@ export default function CoursesPage() {
 
       {/* Modal for Create/Edit Course */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl my-8">
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-800">

@@ -76,3 +76,13 @@ def user_detail(request, user_id):
     elif request.method == 'DELETE':
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+@swagger_auto_schema(method='get', responses={200: UserSerializer(many=True)})
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_all_instructors(request):    
+    # Get all users with role='teacher' (instructors)    
+    instructors = User.objects.filter(role='teacher')
+    serializer = UserSerializer(instructors, many=True)
+    return Response(serializer.data)
