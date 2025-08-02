@@ -1,7 +1,9 @@
 // assignment code
-import { useAuth } from '../hooks/useAuth';
 import { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
 import axios from 'axios';
+
+const baseUrl = "http://127.0.0.1:8000";
 
 export default function CategoriesPage() {
   const { token } = useAuth();
@@ -24,7 +26,7 @@ export default function CategoriesPage() {
   const fetchCategories = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/categories/', {
+      const response = await axios.get(`${baseUrl}/api/categories/`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -54,7 +56,7 @@ export default function CategoriesPage() {
       if (currentCategory) {
         // Update existing category
         const response = await axios.put(
-          `http://127.0.0.1:8000/api/categories/${currentCategory.id}/`,
+          `${baseUrl}/api/categories/${currentCategory.id}/`,
           formData,
           {
             headers: {
@@ -70,7 +72,7 @@ export default function CategoriesPage() {
       } else {
         // Create new category
         const response = await axios.post(
-          'http://127.0.0.1:8000/api/categories/',
+          `${baseUrl}/api/categories/`,
           formData,
           {
             headers: {
@@ -106,7 +108,7 @@ export default function CategoriesPage() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this category?')) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/api/categories/${id}/`, {
+        await axios.delete(`${baseUrl}/api/categories/${id}/`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
