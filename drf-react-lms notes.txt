@@ -83,8 +83,12 @@ git checkout assignment-v1  --(make it active branch) ----------------- 2:20 am
 write code for this branch and commit to save them:
 ...
 git add .
-git commit -m "update v1.8"
+git commit -m "update v1.9"
 git push -u origin main
+----
+git checkout assignment-v1
+git merge main
+git push -u origin assignment-v1
 ------------------
 
 
