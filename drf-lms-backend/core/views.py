@@ -8,6 +8,7 @@ from .serializers import (
     CategorySerializer, CourseSerializer, LessonSerializer, MaterialSerializer,
     EnrollmentSerializer, QuestionAnswerSerializer
 )
+from django.db.models import Count
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions
 
@@ -42,7 +43,8 @@ class IsAuthenticatedForGetOrAdminTeacherForPost(permissions.BasePermission):
 @permission_classes([IsAuthenticated])
 def category_list_create(request):
     if request.method == 'GET':
-        categories = Category.objects.all()
+        #categories = Category.objects.all()
+        categories = Category.objects.annotate(courses_count=Count('course'))
         serializer = CategorySerializer(categories, many=True, context={'request': request})
         return Response(serializer.data)
     elif request.method == 'POST':
@@ -98,8 +100,8 @@ def category_detail(request, pk):
 @permission_classes([IsAuthenticatedForGetOrAdminTeacherForPost])  # Fixed permission class
 def course_list_create(request):
     if request.method == 'GET':
-        # All authenticated users can see the course list
-        courses = Course.objects.all()
+        # All authenticated users can see the course list        
+        courses = Course.objects.all().order_by('category__title', 'title')  # Sort by category title, then course title
         serializer = CourseSerializer(courses, many=True, context={'request': request})
         return Response(serializer.data)
     

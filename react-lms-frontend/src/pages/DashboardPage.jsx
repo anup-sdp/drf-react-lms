@@ -3,6 +3,8 @@ import { useAuth } from "../hooks/useAuth";
 import ProfilePage from "./ProfilePage";
 import UsersPage from "./UsersPage";
 import RegisterPage from "./RegisterPage";
+import CategoriesPage from "./CategoriesPage";
+import CoursesPage from "./CoursesPage";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import axios from "axios";
@@ -125,11 +127,11 @@ function DashboardPage() {
                   <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
               </svg>
             ),
-            // onClick: () => {
-            //   setCurrentPage("");
-            //   setShowProfile(false);
-            // },
-            // active: currentPage === "",
+            onClick: () => {
+              setCurrentPage("categories");
+              setShowProfile(false);
+            },
+            active: currentPage === "categories",
           },
 		  {
             label: "Courses",
@@ -143,11 +145,11 @@ function DashboardPage() {
                   <line x1="3" y1="18" x2="3.01" y2="18"></line>
               </svg>
             ),
-            // onClick: () => {
-            //   setCurrentPage("");
-            //   setShowProfile(false);
-            // },
-            // active: currentPage === "",
+            onClick: () => {
+              setCurrentPage("courses");
+              setShowProfile(false);
+            },
+            active: currentPage === "courses",
           },
         ]
       : []),
@@ -161,6 +163,10 @@ function DashboardPage() {
         return <UsersPage />;
       case "register":
         return <RegisterPage />;
+      case "categories":
+        return <CategoriesPage/>
+      case "courses":
+        return <CoursesPage/>
       case "dashboard":
       default:
         return (

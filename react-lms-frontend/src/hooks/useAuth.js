@@ -1,6 +1,5 @@
-// Import the useContext hook from React
+
 import { useContext } from "react";
-// Import the AuthContext object from the components directory
 import { AuthContext } from "../components/AuthContext.jsx";
 
 // Custom hook to access the AuthContext easily in components

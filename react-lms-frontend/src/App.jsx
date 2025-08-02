@@ -21,6 +21,7 @@ function AppContent() {
                 <div className="mt-6 flex gap-2 justify-center">
                   {/* <span className="text-gray-500">New here?</span>
                   <button onClick={() => goTo("register")} className="text-blue-600 font-semibold hover:underline transition">Register</button> */}
+				  {/* ^ show login option oly. removed register option, as it now kept only under admins authority*/}
                 </div>
               </>
             ) : page === "register" ? (

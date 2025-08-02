@@ -3,6 +3,7 @@ from .models import Course, Category, Lesson, Material, Enrollment, QuestionAnsw
 from users.models import User
 
 class CategorySerializer(serializers.ModelSerializer):
+    courses_count = serializers.IntegerField(read_only=True)
     class Meta:
         model = Category
         fields = '__all__'
